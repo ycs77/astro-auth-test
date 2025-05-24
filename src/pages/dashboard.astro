@@ -1,0 +1,38 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { getSession } from '@/sessions'
+
+const session = getSession(Astro.cookies)
+
+const token = session.get('token')
+
+const data: {
+  user: {
+    id: number
+    name: string
+    email: string
+  }
+} = await fetch(new URL('/api/user', Astro.url), {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+}).then(res => res.json())
+
+const { user } = data
+---
+
+<Layout title="Astro">
+  <header>
+    <nav>
+      <form action="/logout" method="POST">
+        <button>Logout</button>
+      </form>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Astro</h1>
+
+    <div>Welcome, {user.name}!</div>
+  </main>
+</Layout>

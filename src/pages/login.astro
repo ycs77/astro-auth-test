@@ -1,0 +1,42 @@
+---
+import { TOKEN } from '@/constant'
+import Layout from '@/layouts/Layout.astro'
+import { getSession } from '@/sessions'
+
+const session = getSession(Astro.cookies)
+
+let errors: Record<string, string[]> = {}
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData()
+  const email = form.get('email') || ''
+  const password = form.get('password') || ''
+
+  if (email === 'astro123@example.com' && password === 'password') {
+    session.set('token', TOKEN)
+
+    return Astro.redirect('/dashboard', 307)
+  } else {
+    errors = {
+      email: ['Incorrect credentials'],
+    }
+  }
+}
+---
+
+<Layout title="Astro">
+  <h1>Login</h1>
+
+  <form action="/login" method="POST">
+    <div>
+      <label for="email">Email:</label>
+      <input type="text" name="email" value="astro123@example.com" required />
+      {errors.email && <span>{errors.email?.[0]}</span>}
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" name="password" value="password" required />
+    </div>
+    <button type="submit">Login</button>
+  </form>
+</Layout>
