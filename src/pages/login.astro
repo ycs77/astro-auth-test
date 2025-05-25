@@ -6,7 +6,7 @@ import { getSession } from '@/sessions'
 // 取得 session
 const session = getSession(Astro.cookies)
 
-// Error bag (用於存儲 validation 錯誤信息)
+// Error bag (用於保存 validation 錯誤信息)
 let errors: Record<string, string[]> = {}
 
 // 處理 POST 請求
