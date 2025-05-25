@@ -1,18 +1,17 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import { getSession } from '@/sessions'
+import { User } from '@/types/user'
+
+interface Data {
+  user: User
+}
 
 const session = getSession(Astro.cookies)
 
 const token = session.get('token')
 
-const data: {
-  user: {
-    id: number
-    name: string
-    email: string
-  }
-} = await fetch(new URL('/api/user', Astro.url), {
+const data: Data = await fetch(new URL('/api/user', Astro.url), {
   headers: {
     Authorization: `Bearer ${token}`,
   },
@@ -31,7 +30,7 @@ const { user } = data
   </header>
 
   <main>
-    <h1>Astro</h1>
+    <h1>Astro Auth Test</h1>
 
     <div>Welcome, {user.name}!</div>
   </main>

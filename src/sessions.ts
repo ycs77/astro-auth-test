@@ -6,6 +6,11 @@ interface SessionData {
   token: string
 }
 
+// Flash 資料類型
+interface FlashData {
+  errors: Record<string, string[]>
+}
+
 // Cookie Session 設定
 const cookieName = 'astro.session'
 const cookieSetOptions: AstroCookieSetOptions = {
@@ -16,7 +21,7 @@ const cookieSetOptions: AstroCookieSetOptions = {
   sameSite: 'lax',
 }
 
-export const { getSession } = createCookieSessionStorage<SessionData>({
+export const { getSession } = createCookieSessionStorage<SessionData, FlashData>({
   cookieName,
   cookieSetOptions,
 })
