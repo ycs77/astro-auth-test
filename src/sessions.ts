@@ -26,7 +26,8 @@ export const { getSession } = createCookieSessionStorage<SessionData, FlashData>
   cookieSetOptions,
 })
 
-export function refreshSession(cookies: AstroCookies) {
+// 重設 Session
+export function resetSession(cookies: AstroCookies) {
   const cookieDeleteOptions = { ...cookieSetOptions }
   delete cookieDeleteOptions.expires
   delete cookieDeleteOptions.maxAge

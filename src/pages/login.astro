@@ -3,31 +3,43 @@ import { TOKEN } from '@/constant'
 import Layout from '@/layouts/Layout.astro'
 import { getSession } from '@/sessions'
 
+// 取得 session
 const session = getSession(Astro.cookies)
 
+// Error bag (用於存儲 validation 錯誤信息)
 let errors: Record<string, string[]> = {}
 
+// 處理 POST 請求
 if (Astro.request.method === 'POST') {
+  // 從表單數據中獲取 email 和 password
   const form = await Astro.request.formData()
   const email = form.get('email') || ''
   const password = form.get('password') || ''
 
+  // 檢查 email 和 password 是否正確
   if (email === 'astro123@example.com' && password === 'password') {
+    // 取得 auth token...
+
+    // 設置 token 到 session
     session.set('token', TOKEN)
 
-    return Astro.redirect('/dashboard', 307)
+    return Astro.redirect('/dashboard/', 307)
   } else {
-    errors = {
+    // 如果不正確，設置錯誤信息
+    session.flash.set('errors', {
       email: ['Incorrect credentials'],
-    }
+    })
   }
 }
+
+// 從 flash session 中獲取 Error bag
+errors = session.flash.get('errors') || {}
 ---
 
 <Layout title="Astro">
   <h1>Login</h1>
 
-  <form action="/login" method="POST">
+  <form action="/login/" method="POST">
     <div>
       <label for="email">Email:</label>
       <input type="text" name="email" value="astro123@example.com" required />

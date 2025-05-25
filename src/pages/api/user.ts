@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro'
 import { TOKEN } from '@/constant'
 
+// 模擬第三方 API 回傳用戶資料
 export const GET: APIRoute = async ({ request }) => {
   const token = request.headers.get('Authorization')?.replace('Bearer ', '')
 
