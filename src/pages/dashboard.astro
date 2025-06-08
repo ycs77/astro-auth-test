@@ -13,7 +13,7 @@ const session = getSession(Astro.cookies)
 const token = session.get('token')
 
 // 模擬第三方 API 請求以獲取用戶數據
-const data: Data = await fetch(new URL('/api/user/', Astro.url), {
+const data: Data = await fetch(new URL('/api/user', Astro.url), {
   headers: {
     Authorization: `Bearer ${token}`,
   },
@@ -25,7 +25,7 @@ const { user } = data
 <Layout title="Astro">
   <header>
     <nav>
-      <form action="/logout/" method="POST">
+      <form action="/logout" method="POST">
         <button>Logout</button>
       </form>
     </nav>

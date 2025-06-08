@@ -6,9 +6,6 @@ import { getSession } from '@/sessions'
 // 取得 session
 const session = getSession(Astro.cookies)
 
-// Error bag (用於保存 validation 錯誤信息)
-let errors: Record<string, string[]> = {}
-
 // 處理 POST 請求
 if (Astro.request.method === 'POST') {
   // 從表單數據中獲取 email 和 password
@@ -23,7 +20,7 @@ if (Astro.request.method === 'POST') {
     // 設置 token 到 session
     session.set('token', TOKEN)
 
-    return Astro.redirect('/dashboard/', 307)
+    return Astro.redirect('/dashboard')
   } else {
     // 如果不正確，設置錯誤信息
     session.flash.set('errors', {
@@ -33,21 +30,21 @@ if (Astro.request.method === 'POST') {
 }
 
 // 從 flash session 中獲取 Error bag
-errors = session.flash.get('errors') || {}
+const errors = session.flash.get('errors') || {}
 ---
 
 <Layout title="Astro">
   <h1>Login</h1>
 
-  <form action="/login/" method="POST">
+  <form action="/login" method="POST">
     <div>
       <label for="email">Email:</label>
-      <input type="text" name="email" value="astro123@example.com" required />
+      <input type="text" name="email" id="email" value="astro123@example.com" required />
       {errors.email && <span>{errors.email?.[0]}</span>}
     </div>
     <div>
       <label for="password">Password:</label>
-      <input type="password" name="password" value="password" required />
+      <input type="password" name="password" id="password" value="password" required />
     </div>
     <button type="submit">Login</button>
   </form>
