@@ -1,10 +1,6 @@
 ---
 import { TOKEN } from '@/constant'
 import Layout from '@/layouts/Layout.astro'
-import { getSession } from '@/sessions'
-
-// 取得 session
-const session = getSession(Astro.cookies)
 
 // 處理 POST 請求
 if (Astro.request.method === 'POST') {
@@ -17,20 +13,25 @@ if (Astro.request.method === 'POST') {
   if (email === 'astro123@example.com' && password === 'password') {
     // 取得 auth token...
 
+    // 重新生成 session ID
+    await Astro.session?.regenerate()
+
     // 設置 token 到 session
-    session.set('token', TOKEN)
+    Astro.session?.set('token', TOKEN)
 
     return Astro.redirect('/dashboard')
   } else {
     // 如果不正確，設置錯誤信息
-    session.flash.set('errors', {
+    Astro.session?.set('errors', {
       email: ['Incorrect credentials'],
     })
   }
 }
 
 // 從 flash session 中獲取 Error bag
-const errors = session.flash.get('errors') || {}
+const errors = await Astro.session?.get('errors') || {}
+
+Astro.session?.delete('errors')
 ---
 
 <Layout title="Astro">

@@ -1,24 +1,29 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-import { getSession } from '@/sessions'
 import type { User } from '@/types/user'
 
 interface Data {
   user: User
 }
 
-const session = getSession(Astro.cookies)
-
 // 從 session 中獲取 token
-const token = session.get('token')
+const token = await Astro.session?.get('token')
 
 // 模擬第三方 API 請求以獲取用戶數據
-const data: Data = await fetch(new URL('/api/user', Astro.url), {
+const res = await fetch(new URL('/api/user', Astro.url), {
   headers: {
     Authorization: `Bearer ${token}`,
   },
-}).then(res => res.json())
+})
 
+if (!res.ok && res.status === 401) {
+  Astro.session?.destroy()
+
+  return Astro.redirect('/login')
+}
+
+const data: Data = await res.json()
+console.log(data)
 const { user } = data
 ---
 
